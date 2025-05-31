@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kuis Sejarah IPS SMP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Kuis Sejarah IPS SMP</h1>
+    <div id="question-container">
+      <p id="question">Loading soal...</p>
+      <div id="choices"></div>
+    </div>
+    <div id="result"></div>
+    <button id="next-btn" onclick="nextQuestion()">Soal Berikutnya</button>
+    <div id="score-container">
+      Skor: <span id="score">0</span> / <span id="total">0</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+body {
+  font-family: Arial, sans-serif;
+  background: #e3f2fd;
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  margin: 0;
+}
+
+.quiz-container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+h1 {
+  text-align: center;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: none;
+  background-color: #2196f3;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1976d2;
+}
+
+#result {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
+
+#score-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+const questions = [
+  {
+    question: "Siapa proklamator kemerdekaan Indonesia?",
+    choices: ["Jenderal Sudirman", "Soekarno & Hatta", "Mohammad Yamin"],
+    correct: 1
+  },
+  {
+    question: "Kapan Indonesia merdeka?",
+    choices: ["17 Agustus 1945", "10 November 1945", "1 Juni 1945"],
+    correct: 0
+  },
+  {
+    question: "Apa isi Sumpah Pemuda?",
+    choices: [
+      "Mendirikan negara Islam",
+      "Berjuang dengan senjata",
+      "Satu tanah air, satu bangsa, satu bahasa"
+    ],
+    correct: 2
+  },
+  {
+    question: "Kerajaan Hindu tertua di Indonesia adalah?",
+    choices: ["Majapahit", "Sriwijaya", "Kutai"],
+    correct: 2
+  },
+  {
+    question: "Tokoh pergerakan nasional yang mendirikan Budi Utomo adalah?",
+    choices: ["Ki Hajar Dewantara", "Dr. Sutomo", "Douwes Dekker"],
+    correct: 1
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const choicesEl = document.getElementById("choices");
+const resultEl = document.getElementById("result");
+const scoreEl = document.getElementById("score");
+const totalEl = document.getElementById("total");
+const nextBtn = document.getElementById("next-btn");
+
+totalEl.textContent = questions.length;
+
+function showQuestion() {
+  const q = questions[currentQuestion];
+  questionEl.textContent = q.question;
+  choicesEl.innerHTML = "";
+  resultEl.textContent = "";
+  q.choices.forEach((choice, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = choice;
+    btn.onclick = () => checkAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+}
+
+function checkAnswer(choice) {
+  const q = questions[currentQuestion];
+  if (choice === q.correct) {
+    resultEl.textContent = "Benar! 🎉";
+    resultEl.style.color = "green";
+    score++;
+  } else {
+    resultEl.textContent = "Salah! ❌";
+    resultEl.style.color = "red";
+  }
+  scoreEl.textContent = score;
+  Array.from(choicesEl.children).forEach(btn => btn.disabled = true);
+  nextBtn.style.display = "block";
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    showQuestion();
+    nextBtn.style.display = "none";
+  } else {
+    questionEl.textContent = "Kuis selesai!";
+    choicesEl.innerHTML = "";
+    resultEl.textContent = `Skor akhir kamu: ${score} dari ${questions.length}`;
+    resultEl.style.color = "black";
+    nextBtn.style.display = "none";
+  }
+}
+
+showQuestion();
